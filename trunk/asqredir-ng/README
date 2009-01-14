@@ -1,0 +1,12 @@
+This is a reimplementation of what I found "asqredir", something written
+in C++ or something, which seemed to be horribly unstable and unmaintained.
+
+The redir.pl script is very obvious and very simple. Its very dumb too;
+the speed of the script depends on the number of lines in the file.
+It doesn't try to combine them into larger regular expression patterns
+for quicker matching.
+
+Files:
+	redir.pl	- The Squid redirector program
+	redirect.txt	- The documentation and example configuration file
+
