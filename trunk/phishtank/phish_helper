@@ -7,9 +7,8 @@ use TDB_File;
 # $Id: phish_helper,v 1.3 2007-07-12 07:52:14 adrian Exp $
 
 # XXX todo:
-# + don't 'die' after startup (eg when re-opening the file); squid will die if the
-#   helper dies!
-# + stop performing lookups if the file hasn't been updated in a time period (a day)
+# + don't 'die' after startup (eg when re-opening the file); squid will die
+#   if the helper dies!
 
 $| = 1;
 
