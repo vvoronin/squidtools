@@ -1,0 +1,113 @@
+#!/usr/local/bin/perl -w
+
+use strict;
+use Fcntl;
+use TDB_File;
+
+# $Id: phish_helper,v 1.3 2007-07-12 07:52:14 adrian Exp $
+
+# XXX todo:
+# + don't 'die' after startup (eg when re-opening the file); squid will die if the
+#   helper dies!
+# + stop performing lookups if the file hasn't been updated in a time period (a day)
+
+$| = 1;
+
+my $debug = 0;
+
+my (%db);
+my ($dbname) = "";
+my ($db_mtime) = -1;
+my ($recheck) = 0;
+
+
+sub debug($) {
+	my ($l) = @_;
+	print STDERR "phish_helper: " . $l if $debug;
+}
+
+sub printerror($$) {
+	my ($url, $phishurl) = @_;
+	print "ERR message=$phishurl\n";
+	print STDERR "phish_helper: Phishtank denied access to URL: $url\n";
+}
+
+sub get_mtime($) {
+	my ($fn) = @_;
+
+	my (@s);
+
+	(@s = stat($fn)) || return -1;
+	return $s[9];
+}
+
+# Recheck the database every 30 seconds
+sub alarm_sub() {
+	$recheck = 1;
+	alarm 30;
+}
+
+# Do we need to reopen the database?
+# Redo if we need to.
+sub recheck() {
+	my ($s) = get_mtime($dbname);
+	if ($s < 0) {
+		print STDERR "phish_helper: stat-ing the file failed; please investigate!\n";
+		return;
+	}
+	# Has the file changed?
+	if ($s > $db_mtime) {
+		print STDERR "phish_helper: file has changed (mtime $s); re-opening the database\n";
+		untie %db;
+		tie %db, 'TDB_File', $dbname, TDB_DEFAULT, O_RDONLY, 0644 || die "Couldn't open $dbname: $!\n";
+		$db_mtime = $s;
+	}
+}
+
+
+#
+# Start of code
+#
+
+if (scalar @ARGV < 1) {
+	print "ERROR: please specify the database file location\n";
+	exit 1;
+}
+
+$dbname = $ARGV[0];
+tie %db, 'TDB_File', $dbname, TDB_DEFAULT, O_RDONLY, 0644 || die "Couldn't open $dbname: $!\n";
+$db_mtime = get_mtime($dbname);
+if ($db_mtime < 0) {
+	print STDERR "phish_helper: Couldn't stat() the database file!\n";
+	exit 1;
+}
+
+#
+# We'll run the lookup with the URL and URL with trailing '/', in case somehow the browser
+# munges things. I've seen it happen once during testing..
+#
+
+$SIG{ALRM} = \&alarm_sub;
+alarm 30;
+
+while (<STDIN>) {
+	chomp;
+	if ($recheck) {
+		$recheck = 0;
+		recheck();
+	}
+	my $v = "";
+	debug("Got '$_' from Squid\n");
+	if (exists $db{$_}) {
+		$v = $db{$_};
+		debug("FAIL: $_\n");
+		printerror($_, $v);
+	} elsif ( (substr($_, -1, 1) eq '/') && (exists $db{substr($_, 0, -1)}) ) {
+		$v = $db{substr($_, 0, -1)};
+		debug("FAIL: $_\n");
+		printerror($_, $v);
+	} else {
+		debug("OK: $_\n");
+		print "OK\n";
+	}
+}

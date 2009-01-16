@@ -1,0 +1,7 @@
+
+* Write a script to prune the database from time to time; at the moment records
+  are added from updates but deleted entries aren't deleted from the BDB.
+  phishtank don't provide diffs and the file isn't easily "diffable" without
+  loading in the current xml file into a seperate BDB database and doing a
+  comparison with the current BDB database.
+

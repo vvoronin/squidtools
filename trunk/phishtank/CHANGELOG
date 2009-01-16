@@ -1,0 +1,17 @@
+
+0.03 (12 July 2007)
+	* Migrate to using TDB, for simple multi-reader, single-writer
+	* Do a full database rewrite every update cycle
+	* phish_helper now periodically stat's the database file and reopens
+	  it if it changes.
+
+0.02 (8 July 2007)
+	* Add Update script to periodically handle updates
+	* Print out some statistics as the database is being generated/updated
+	* Modify the code to use Perl's BerkeleyDB rather than NDBM;
+	  BDB should allow us to run multiple-reader single-writer
+	  without requiring invasive code changes (read: "environments"
+	  in BDB's manual.)
+
+0.01 (7 July 2007)
+	* Initial Release

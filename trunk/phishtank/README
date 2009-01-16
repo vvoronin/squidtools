@@ -1,0 +1,46 @@
+
+$Id: README,v 1.1 2007-07-07 13:37:24 adrian Exp $
+
+This is a very simple and naive phishtank.com filtering setup.
+
+How it works:
+
+* Fetch the index.xml file from phishtank.com:
+
+  $ wget http://data.phishtank.com/data/online-valid/
+
+  This produces index.xml.
+
+* Run process.pl, which reads index.xml and writes out a Berkeley DB Hash
+  database of URLs to match against, defaulting to 'phishtank'.
+
+* Run dump.pl; make sure that the data is loaded into the Berkeley DB
+  correctly.
+
+* Configure a recent (as in, Squid-2.6 or Squid-3 released June 2007 or later)
+  to use an external ACL helper. Something along these lines:
+
+
+# This defines the external ACL; tells it where the database is, and
+# defines the ACL name "phishacl" to use in ACL rules.
+external_acl_type phishextacl %URI /home/adrian/work/squid/phishtank/phish_helper /home/adrian/work/squid/phishtank/phishtank
+acl phishacl external phishextacl
+
+# Put this in your ACL section before your 'permit' rules.
+deny_info ERR_PHISHTANK_DENIED phishacl
+http_access deny !phishacl 
+
+* Copy the ERR_PHISHTANK_DENIED (English only, sorry!) into your
+  language-specific error directory. The deny_info rule above
+  will use that page; the page will display some basic information
+  and give a link to the phishtank.com database entry.
+
+* You can turn $debug to 1 in "phish_helper" to echo debug messages in
+  Squid's 'cache.log' file. Turn it to 0 when you're happy its
+  working.
+
+
+Adrian
+
+
+

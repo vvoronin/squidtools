@@ -1,0 +1,25 @@
+#!/bin/sh
+
+DATADIR="/home/adrian/work/squid/phishtank"
+BINDIR="/home/adrian/work/squid/phishtank"
+
+PATH=$PATH:/usr/local/bin ; export PATH
+
+cd ${DATADIR}
+
+wget -O ${DATADIR}/index.xml http://data.phishtank.com/data/online-valid/
+if [ $? != 0 ]; then
+	echo "ERROR: couldn't wget the file! tsk."
+	exit 1
+fi
+
+echo "Fetch successful. Build new database file."
+
+# Create a new database file with all the new entries
+${BINDIR}/process.pl ${DATADIR}/index.xml ${DATADIR}/phishtank.db
+
+# We need to prune the old database entries from time
+# to time; but for now we'll just add entries to the database
+# as we read them in.
+
+echo "Completed update."
