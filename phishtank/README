@@ -17,9 +17,8 @@ How it works:
 * Run dump.pl; make sure that the data is loaded into the Berkeley DB
   correctly.
 
-* Configure a recent (as in, Squid-2.6 or Squid-3 released June 2007 or later)
+* Configure a recent Squid (as in, Cacheboy all version, Squid 2.6, 2.7, 3.0, 3.1)
   to use an external ACL helper. Something along these lines:
-
 
 # This defines the external ACL; tells it where the database is, and
 # defines the ACL name "phishacl" to use in ACL rules.
