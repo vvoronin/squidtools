@@ -64,13 +64,12 @@ sub match_url($$) {
 			$s = '"' . $r->{"sub"} . '"';
 		}
 		my ($nurl) = $url;
-		# /g means "evaluate more than one match"
 		# /e means "treat the substitution as something to evaluate
 		# just one e doesn't properly evaluate the string; it turns out what
 		# you need to do is wrap it in single quotes so it doesn't quote escape it
 		# for you (then $1 is interpreted as a literal, not something to substitute
 		# into!) and the second seems to remove the quotes, evaluating the string.
-		if ($nurl =~ s/$r->{"pattern"}/$s/gee) {
+		if ($nurl =~ s/$r->{"pattern"}/$s/ee) {
 			if ($r->{"action"} eq "allow") {
 				print STDERR "MATCH: ALLOW: $url\n" if $do_debug;
 				print $url . "\n";
