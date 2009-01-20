@@ -1,0 +1,6 @@
+* The config parser should allow whitespace (tabs, spaces) between the match and the
+  substitution!
+
+* The regular expressions should be pre-compiled damnit; evaluating each and compiling
+  each for each match is just plain stupid.
+
