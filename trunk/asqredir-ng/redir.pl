@@ -7,6 +7,7 @@
 #
 
 # History:
+# - 2009/01/20 - Modify regex evaluation to allow substitution strings to use $1, $2, etc.
 # - 2008/12/16 - initial revision
 
 use strict;
@@ -16,7 +17,7 @@ use IO::File;
 $| = 1;
 
 my (@pats);
-my ($do_debug) = 0;
+my ($do_debug) = 1;
 
 # Load in patterns
 
@@ -57,14 +58,26 @@ sub match_url($$) {
 
 	foreach (@$pats) {
 		my ($r) = $_;
-		if ($url =~ m/($r->{"pattern"})/) {
+		my ($s) = "";
+
+		if ($r->{"action"} eq "substitute") {
+			$s = '"' . $r->{"sub"} . '"';
+		}
+		my ($nurl) = $url;
+		# /g means "evaluate more than one match"
+		# /e means "treat the substitution as something to evaluate
+		# just one e doesn't properly evaluate the string; it turns out what
+		# you need to do is wrap it in single quotes so it doesn't quote escape it
+		# for you (then $1 is interpreted as a literal, not something to substitute
+		# into!) and the second seems to remove the quotes, evaluating the string.
+		if ($nurl =~ s/$r->{"pattern"}/$s/gee) {
 			if ($r->{"action"} eq "allow") {
 				print STDERR "MATCH: ALLOW: $url\n" if $do_debug;
 				print $url . "\n";
 				return;
 			} else {
-				print STDERR "MATCH: SUBSTITUTE: $url -> " . $r->{"sub"} . "\n" if $do_debug;
-				print $r->{"sub"} . "\n";
+				print STDERR "MATCH: SUBSTITUTE: $url -> " . $nurl . "\n" if $do_debug;
+				print $nurl . "\n";
 				return;
 			}
 		}
