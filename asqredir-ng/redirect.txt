@@ -6,8 +6,8 @@
 #   * start with a "#" and therefore are comments
 #   * start with a "~" and are followed immediately by a url_pattern for
 #     requests which should always be allowed.
-#   * contain a url_pattern and a redirect_url, separated by a white
-#     space, for requests which should be redirected to redirect_url
+#   * contain a url_pattern and a redirect_url, separated by a SPACE CHARACTER
+#     (not tabs!), for requests which should be redirected to redirect_url
 #
 #   # comment
 #   ~url_pattern
@@ -45,4 +45,7 @@
 #/image.ng http://192.168.35.52/adbanner.png
 #/image/ads/ http://192.168.35.52/adbanner.png
 #/images/ads/ http://192.168.35.52/adbanner.png
-
+#
+# You can also use $1, $2, etc, to match on match fragments. For example:
+#
+# http://www.test.com/(.*) http://www.example.com/$1
