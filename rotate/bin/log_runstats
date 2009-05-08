@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Are we meant to run?
+
+. /local/cdn/etc/proxylog.conf
+
+if [ "x$squid_log_stats_enable" != "xYES" ]; then
+	exit
+fi
+
+BINDIR=$squidrotate_basedir
+SQUID_BIN=$squidrotate_bindir
+SQUID_LOGDIR=$squidrotate_logdir
+SQUID_ARCHIVEDIR=$squidrotate_archivedir
+SQUID_STATSDIR=$squidrotate_statsdir
+SQUID_HOSTNAME=$squidrotate_hostname
+
+mkdir -p ${SQUID_STATSDIR}
+
+for dy in `ls ${SQUID_ARCHIVEDIR}`; do
+	echo "DEBUG: Checking $dy"
+	for j in `ls ${SQUID_ARCHIVEDIR}/${dy}`; do
+		i="${dy}/${j}"
+		if [ ! -f "${SQUID_ARCHIVEDIR}/${i}/stats-ran" ]; then
+			echo "NOTICE: Running stats on ${i}!"
+			${squid_log_stats_script} ${SQUID_HOSTNAME} ${SQUID_ARCHIVEDIR}/${i} > ${SQUID_ARCHIVEDIR}/${i}/stats.txt || exit 1
+			touch ${SQUID_ARCHIVEDIR}/${i}/stats-ran
+		fi
+	done
+done
+
+echo "NOTICE: completed"
+
+

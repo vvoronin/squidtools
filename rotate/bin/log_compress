@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Are we meant to run?
+
+. /local/cdn/etc/proxylog.conf
+
+if [ "x$squid_log_compress_enable" != "xYES" ]; then
+	exit
+fi
+
+BINDIR=$squidrotate_basedir
+SQUID_BIN=$squidrotate_bindir
+SQUID_LOGDIR=$squidrotate_logdir
+SQUID_ARCHIVEDIR=$squidrotate_archivedir
+
+for dy in `ls ${SQUID_ARCHIVEDIR}`; do
+        echo "DEBUG: Checking $dy"
+        for j in `ls ${SQUID_ARCHIVEDIR}/${dy}`; do
+                i="${dy}/${j}"
+		for fn in `ls ${SQUID_ARCHIVEDIR}/${i} | grep ".log$"` ; do
+			echo "COMPRESSING: ${SQUID_ARCHIVEDIR}/${i}/${fn}"
+			gzip -9 ${SQUID_ARCHIVEDIR}/${i}/${fn}
+		done
+	done
+done
+
+echo "NOTICE: completed"
+
+

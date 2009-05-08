@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Are we meant to run?
+
+. /local/cdn/etc/proxylog.conf
+
+if [ "x$squidrotate_enable" != "xYES" ]; then
+	exit
+fi
+
+BINDIR=$squidrotate_basedir
+SQUID_BIN=$squidrotate_bindir
+SQUID_LOGDIR=$squidrotate_logdir
+SQUID_ARCHIVEDIR=$squidrotate_archivedir
+
+echo "NOTICE: call squid rotate"
+${SQUID_BIN} -k rotate
+# Is this sleep length enough?
+echo "NOTICE: sleeping for 60 seconds"
+sleep 60
+echo "NOTICE: running log_rename"
+
+# XXX this should now be run on all log rotations which
+# XXX haven't been moved out of the way!
+SUFFIX=0
+
+# Make sure the destination directory exists!
+mkdir -p ${SQUID_ARCHIVEDIR}
+
+while [ $SUFFIX -lt 365 ]; do
+	if [ -f "${SQUID_LOGDIR}/cache.log.${SUFFIX}" ]; then
+		echo "Moving suffix ${SUFFIX}.."
+		${BINDIR}/log_rename ${SQUID_LOGDIR} ${SQUID_ARCHIVEDIR} ".${SUFFIX}"
+	fi
+	SUFFIX="`expr $SUFFIX + 1`"
+done
+
+echo "NOTICE: completed"
+
+

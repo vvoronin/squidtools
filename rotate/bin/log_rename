@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Rotate the squid log files, based on the access.log file content.
+# If the access log file doesn't have an entry then use the current timestamp
+# and make sure its unique.
+
+# Call the script with the squid logfile directory as the first argument;
+# the archive directory as the second dir.
+
+. /local/cdn/etc/proxylog.conf
+
+LOGDIR=$1
+ARCHIVEDIR=$2
+CURTIME="`date +%s`"
+SUFFIX=$3
+
+echo "From $LOGDIR to $ARCHIVEDIR suffix $SUFFIX"
+
+if [ "x$LOGDIR" = "x" ]; then
+	echo "ERROR: no logfile path given"
+	exit 127
+fi
+
+if [ "x$ARCHIVEDIR" = "x" ]; then
+	echo "ERROR: no archive path given"
+	exit 127
+fi
+
+if [ ! -d $LOGDIR ]; then
+	echo "ERROR: logfile directory $LOGDIR doesn't exist"
+	exit 127
+fi
+
+if [ ! -f "$LOGDIR/access.log${SUFFIX}" ]; then
+	echo "ERROR: $LOGDIR/access.log${SUFFIX} doesn't exist"
+	exit 127
+fi
+
+if [ ! -f "$LOGDIR/cache.log${SUFFIX}" ]; then
+	echo "ERROR: $LOGDIR/cache.log${SUFFIX} doesn't exist"
+	exit 127
+fi
+
+if [ ! -f "$LOGDIR/store.log${SUFFIX}" ]; then
+	echo "ERROR: $LOGDIR/store.log${SUFFIX} doesn't exist"
+	exit 127
+fi
+
+TS_START="`head -1 $LOGDIR/access.log${SUFFIX} | cut -f1 -d' '`"
+TS_END="`tail -1 $LOGDIR/access.log${SUFFIX} | cut -f1 -d' '`"
+
+if [ "x$TS_START" = "x" -o "x$TS_END" = "x" ]; then
+	echo "NOTICE: access logfile is empty; use current timestamp (${CURTIME})"
+	TS_START=$CURTIME
+	TS_END=$CURTIME
+fi
+
+# Calculate the date stamp prefix required
+DATESTAMP="`echo ${TS_START} | sed 's@\..*$@@'`"
+# DATEPREFIX="`date -j -f '%s' ${DATESTAMP} '+%Y-%m-%d'`"
+DATEPREFIX="`${squidrotate_basedir}/log_dateprefix ${DATESTAMP}`"
+
+echo "NOTICE: access logfile from $TS_START to $TS_END; date prefix is ${DATEPREFIX}"
+
+# Rename the logfiles..
+mkdir -p ${ARCHIVEDIR}/${DATEPREFIX}/${TS_START}
+# XXX Check the return value!
+mv ${LOGDIR}/access.log${SUFFIX} ${ARCHIVEDIR}/${DATEPREFIX}/${TS_START}/access.log
+mv ${LOGDIR}/cache.log${SUFFIX} ${ARCHIVEDIR}/${DATEPREFIX}/${TS_START}/cache.log
+mv ${LOGDIR}/store.log${SUFFIX} ${ARCHIVEDIR}/${DATEPREFIX}/${TS_START}/store.log
+
+echo "NOTICE: completed"
+
