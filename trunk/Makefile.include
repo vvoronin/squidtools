@@ -1,0 +1,7 @@
+BASEDIR="/local/squidtools"
+
+INSTALL=install
+
+INSTALL_DIR=$(INSTALL) -m 0755 -d
+INSTALL_FILE=$(INSTALL) -m 0644
+INSTALL_BIN=$(INSTALL) -m 0755
