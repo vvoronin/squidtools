@@ -12,6 +12,6 @@ install:
 	$(INSTALL_BIN) bin/log_rename $(BASEDIR)/rotate/bin
 	$(INSTALL_BIN) bin/log_rotate $(BASEDIR)/rotate/bin
 	$(INSTALL_BIN) bin/log_runstats $(BASEDIR)/rotate/bin
-	$(INSTALL_ETC) etc/proxylog.conf $(BASEDIR)/rotate/etc
+	$(INSTALL_FILE) etc/proxylog.conf $(BASEDIR)/rotate/etc
 
 clean:

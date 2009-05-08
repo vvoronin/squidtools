@@ -1,4 +1,4 @@
-BASEDIR="/local/squidtools"
+BASEDIR=/local/squidtools
 
 INSTALL=install
 
