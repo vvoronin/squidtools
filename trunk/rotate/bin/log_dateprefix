@@ -1,0 +1,8 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my @a = gmtime($ARGV[0]);
+printf "%.4d-%.2d-%.2d", $a[5] + 1900, $a[4] + 1, $a[3];
+exit 0
+
