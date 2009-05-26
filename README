@@ -1,0 +1,6 @@
+These utilities are snippets of useful code which I've written in the past.
+
+rotate/ 		Handle squid logfile rotation, renaming and compression
+phishtank/		A "phishtank" anti-phishing plugin
+asqredir-ng/		A rewrite in Perl of "asqredir", a simple redirector
+
