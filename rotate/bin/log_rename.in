@@ -7,12 +7,12 @@
 # Call the script with the squid logfile directory as the first argument;
 # the archive directory as the second dir.
 
-CONFIGFILE?=    @ROTATE_ETCDIR@/proxylog.conf
+CONFIGFILE=${CONFIGFILE:-@ROTATE_ETCDIR@/proxylog.conf}
 . ${CONFIGFILE}
 
 LOGDIR=$1
 ARCHIVEDIR=$2
-CURTIME="`date +%s`"
+CURTIME="`perl -e 'print time();'`"
 SUFFIX=$3
 
 echo "From $LOGDIR to $ARCHIVEDIR suffix $SUFFIX"

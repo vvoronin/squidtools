@@ -1,8 +1,7 @@
 #!/bin/sh
 
-CONFIGFILE?=    @ROTATE_ETCDIR@/proxylog.conf
+CONFIGFILE=${CONFIGFILE:-@ROTATE_ETCDIR@/proxylog.conf}
 . ${CONFIGFILE}
-
 
 # Are we meant to run?
 if [ "x$squidrotate_enable" != "xYES" ]; then
