@@ -7,7 +7,7 @@
 # Call the script with the squid logfile directory as the first argument;
 # the archive directory as the second dir.
 
-CONFIGFILE?=    @ETCDIR@/proxylog.conf
+CONFIGFILE?=    @ROTATE_ETCDIR@/proxylog.conf
 . ${CONFIGFILE}
 
 LOGDIR=$1
