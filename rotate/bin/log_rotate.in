@@ -1,9 +1,10 @@
 #!/bin/sh
 
+CONFIGFILE?=    @ETCDIR@/proxylog.conf
+. ${CONFIGFILE}
+
+
 # Are we meant to run?
-
-. @ETCDIR@/etc/proxylog.conf
-
 if [ "x$squidrotate_enable" != "xYES" ]; then
 	exit
 fi
