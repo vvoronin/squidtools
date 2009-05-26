@@ -1,17 +1,3 @@
 
-$Id: LICENCE,v 1.1 2007-07-07 13:37:24 adrian Exp $
-
-This is licenced just like MySQL; ie:
-
-* If its part of a open source software project, where the software source
-  is freely available - then this is licenced under the GPL.
-
-* If its distributed as part of a commercial product, please contact
-  Xenion Communications - via http://www.xenion.com.au/ for more
-  information. I'm not going to charge a large amount to licence something
-  which is (for now) so simple, but I'd prefer to know who is using this.
-
-* No matter what, this software is provided "as-is" with no implied warranty
-  or guarantee for suitability or functionality! The only way you'll get
-  this is if you're paying for support.
+This software is licenced under the Affero GPL (AGPL) version 2.
 
