@@ -1,4 +1,6 @@
 BASEDIR=/local/squidtools
+BINDIR=$(BASEDIR)/bin
+ETCDIR=$(BASEDIR)/etc
 
 INSTALL=install
 
