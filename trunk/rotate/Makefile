@@ -1,17 +1,20 @@
 include ../Makefile.include
+SUBDIRS=bin etc
 
 all:
+	@for i in $(SUBDIRS); do \
+		echo "Making all in $$i.."; \
+		( cd $$i && $(MAKE) all ); \
+	done
 
 install:
-	$(INSTALL_DIR) $(BASEDIR)
-	$(INSTALL_DIR) $(BASEDIR)/rotate
-	$(INSTALL_DIR) $(BASEDIR)/rotate/bin
-	$(INSTALL_DIR) $(BASEDIR)/rotate/etc
-	$(INSTALL_BIN) bin/log_compress $(BASEDIR)/rotate/bin
-	$(INSTALL_BIN) bin/log_dateprefix $(BASEDIR)/rotate/bin
-	$(INSTALL_BIN) bin/log_rename $(BASEDIR)/rotate/bin
-	$(INSTALL_BIN) bin/log_rotate $(BASEDIR)/rotate/bin
-	$(INSTALL_BIN) bin/log_runstats $(BASEDIR)/rotate/bin
-	$(INSTALL_FILE) etc/proxylog.conf $(BASEDIR)/rotate/etc
+	@for i in $(SUBDIRS); do \
+		echo "Making install in $$i.."; \
+		( cd $$i && $(MAKE) install ); \
+	done
 
 clean:
+	@for i in $(SUBDIRS); do \
+		echo "Making clean in $$i.."; \
+		( cd $$i && $(MAKE) clean ); \
+	done
