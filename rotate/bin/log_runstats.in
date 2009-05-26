@@ -2,7 +2,7 @@
 
 # Are we meant to run?
 
-. /local/cdn/etc/proxylog.conf
+. @ETCDIR@/proxylog.conf
 
 if [ "x$squid_log_stats_enable" != "xYES" ]; then
 	exit
