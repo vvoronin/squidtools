@@ -1,7 +1,7 @@
 include ../../Makefile.include
 
 ROTATE_BASEDIR=$(BASEDIR)/rotate
-ROTATE_BINDIR=$(BASEDIR)/bin
+ROTATE_BINDIR=$(ROTATE_BASEDIR)/bin
 ROTATE_ETCDIR=$(ROTATE_BASEDIR)/etc
 
 SRCS=log_compress.in log_rename.in log_runstats.in log_dateprefix.in log_rotate.in
