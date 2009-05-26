@@ -1,9 +1,9 @@
 #!/bin/sh
 
+CONFIGFILE?=    @ETCDIR@/proxylog.conf
+. ${CONFIGFILE}
+
 # Are we meant to run?
-
-. @ETCDIR@/proxylog.conf
-
 if [ "x$squid_log_stats_enable" != "xYES" ]; then
 	exit
 fi
