@@ -2,7 +2,7 @@
 
 # Are we meant to run?
 
-. /local/cdn/etc/proxylog.conf
+. @ETCDIR@/etc/proxylog.conf
 
 if [ "x$squidrotate_enable" != "xYES" ]; then
 	exit
